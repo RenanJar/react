@@ -25,7 +25,7 @@ const SidebarContainer = ({
   <div
     className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
       visible ? 'translate-x-0' : '-translate-x-full'
-    } ${backgroundColor}  bg-clip-border p-4 text-gray-700 shadow-xl shadow-blue-gray-900/5`}
+    } ${backgroundColor} bg-clip-border p-4 text-gray-700 shadow-xl shadow-blue-gray-900/5`}
   >
     {children}
   </div>
@@ -33,14 +33,14 @@ const SidebarContainer = ({
 
 const SidebarHeader = ({ title }: { title: React.ReactNode }) => (
   <div className="p-4 mb-2">
-    <h5 className="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
+    <h5 className="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-black">
       {title}
     </h5>
   </div>
 )
 
 const SidebarNav = ({ children }: { children: React.ReactNode }) => (
-  <nav className="flex min-w-[80%] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
+  <nav className="flex min-w-[80%] flex-col gap-1 p-2 font-sans text-base font-normal text-black">
     {children}
   </nav>
 )
@@ -60,7 +60,7 @@ const SidebarNavItem = ({
 }) => (
   <Link
     href={path}
-    className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white ${hoverBgColor} group`}
+    className={`flex items-center p-2 rounded-lg text-black ${hoverBgColor} group`}
     onClick={onClick}
   >
     <span>{icon}</span>
