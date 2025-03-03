@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { login as apiLogin, logout as apiLogout } from '@/api/auth';
-import { CookieAccesProvider } from '@/service/CookieAccesProvider';
-import { IstorageProvider } from '@/service/IstorageProvider';
+import { StorageProviderInterface } from '@/types/storage/storageProvider.types';
+import { CookieAccessProvider } from '@/services/storage/CookieAccesProvider';
 
 interface AuthContextProps {
   restaurante: string | null;
@@ -11,7 +11,7 @@ interface AuthContextProps {
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
 
-const storageProvider: IstorageProvider = new CookieAccesProvider();
+const storageProvider: StorageProviderInterface = new CookieAccessProvider();
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [restaurante, setRestaurante] = useState<AuthContextProps['restaurante']>(null);
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (email: string, password: string, restaurante: string) => {
+  const login = async (email: string, password: string, restaurante: string | null) => {
     const data = await apiLogin(email, password, restaurante);
     storageProvider.save('token', data.accessToken);
     setRestaurante('dados Restaurante');

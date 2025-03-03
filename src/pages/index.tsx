@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginPage from './login';
+import LoginPage from '../components/features/login/login';
 import { AuthProvider } from '@/context/AuthContext';
 export default function Home() {
   return (

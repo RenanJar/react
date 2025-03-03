@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { getRestaurante } from '@/api/restaurante.api';
+import { getRestaurante } from '@/services/api/restaurante.api';
 
 const Container = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center justify-center min-h-screen bg-blue-950 p-4">{children}</div>

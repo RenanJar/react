@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
-import config from '../../config';
-import { CookieAccessProvider } from '@/services/storage/CookieAccesProvider';
+import config from '../../../config';
 import { StorageProviderInterface } from '@/types/storage/storageProvider.types';
+import { CookieAccessProvider } from '../storage/CookieAccesProvider';
 const api: AxiosInstance = axios.create({
   baseURL: config.apiBaseUrl,
   headers: { 'Content-Type': 'application/json' },

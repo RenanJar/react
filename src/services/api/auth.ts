@@ -1,7 +1,6 @@
 import { CookieAccessProvider } from '@/services/storage/CookieAccesProvider';
 import api from './api';
 import { StorageProviderInterface } from '@/types/storage/storageProvider.types';
-
 interface LoginResponse {
   accessToken: string;
   refreshToken: string;

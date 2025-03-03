@@ -1,7 +1,7 @@
-import { IstorageProvider } from './IstorageProvider';
+import { StorageProviderInterface } from '@/types/storage/storageProvider.types';
 import Cookies from 'js-cookie';
 
-export class CookieAccesProvider implements IstorageProvider {
+export class CookieAccessProvider implements StorageProviderInterface {
   save(key: string, value: string): void {
     if (this.get(key)) return;
     Cookies.set(key, value);

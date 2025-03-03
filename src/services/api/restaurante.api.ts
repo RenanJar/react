@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
-import config from '../../config';
 import { error } from 'console';
+import config from '../../../config';
 
 const baseURL = config.apiBaseUrl;
 const uriRestaurate = '/rest/restaurantes';

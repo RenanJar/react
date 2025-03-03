@@ -41,6 +41,5 @@ export default [
     ignores: ['.next/**/*']
   },
 
-  // Configuração do Prettier
   prettierConfig,
 ];
