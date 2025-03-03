@@ -1,9 +1,12 @@
 import React from 'react';
-import Login from './login';
-export default function Home() { 
+import LoginPage from './login';
+import { AuthProvider } from '@/context/AuthContext';
+export default function Home() {
   return (
-   <div>
-    <Login></Login>
-  </div>
-  )
+    <div>
+      <AuthProvider>
+        <LoginPage></LoginPage>
+      </AuthProvider>
+    </div>
+  );
 }

@@ -1,9 +1,9 @@
+import { useRouter } from 'next/router';
 
-
-export default function Home() { 
+export default function HomePage() {
   return (
     <div>
-      HOME
+      <h1>Bem-vindo à página inicial</h1>
     </div>
-  )
+  );
 }

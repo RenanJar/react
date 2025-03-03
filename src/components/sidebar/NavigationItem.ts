@@ -1,7 +1,7 @@
-import React from "react"
+import React from 'react';
 
-export interface NavigationItem{
-    title: string
-    path: string
-    icon: React.ReactNode
+export interface NavigationItem {
+  title: string;
+  path: string;
+  icon: React.ReactNode;
 }

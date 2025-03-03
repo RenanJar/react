@@ -1,22 +1,24 @@
-import Image from 'next/image'
-import React, { useState } from 'react'
+import Image from 'next/image';
+import React, { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { getRestaurante } from '@/api/restaurante.api';
 
 const Container = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center justify-center min-h-screen bg-blue-950 p-4">{children}</div>
-)
+);
 
 const Card = ({ children }: { children: React.ReactNode }) => (
   <div className="flex bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl w-full">
     {children}
   </div>
-)
+);
 
 const Form = ({
   children,
-  onHandleSubmit
+  onHandleSubmit,
 }: {
-  children: React.ReactNode
-  onHandleSubmit: (event: React.FormEvent<HTMLFormElement>) => void
+  children: React.ReactNode;
+  onHandleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }) => {
   return (
     <>
@@ -28,17 +30,23 @@ const Form = ({
         <form onSubmit={onHandleSubmit}>{children}</form>
       </div>
     </>
-  )
-}
+  );
+};
 
-const InputMail = ({ onEmailChange }: { onEmailChange: (value: string) => void }) => {
-  const [value, setValue] = useState('')
+const InputMail = ({
+  isDisabled,
+  onEmailChange,
+}: {
+  isDisabled: boolean;
+  onEmailChange: (value: string) => void;
+}) => {
+  const [value, setValue] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value
-    setValue(newValue)
-    onEmailChange(newValue)
-  }
+    const newValue = e.target.value;
+    setValue(newValue);
+    onEmailChange(newValue);
+  };
 
   return (
     <div className="mb-4">
@@ -49,19 +57,26 @@ const InputMail = ({ onEmailChange }: { onEmailChange: (value: string) => void }
         placeholder="coolname@name.com"
         onChange={handleChange}
         value={value}
+        disabled={isDisabled}
       />
     </div>
-  )
-}
+  );
+};
 
-const InputPassword = ({ onPasswoordChange }: { onPasswoordChange: (value: string) => void }) => {
-  const [value, setValue] = useState('')
+const InputPassword = ({
+  isDisabled,
+  onPasswordChange,
+}: {
+  isDisabled: boolean;
+  onPasswordChange: (value: string) => void;
+}) => {
+  const [value, setValue] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value
-    setValue(newValue)
-    onPasswoordChange(newValue)
-  }
+    const newValue = e.target.value;
+    setValue(newValue);
+    onPasswordChange(newValue);
+  };
 
   return (
     <div className="mb-4">
@@ -72,12 +87,13 @@ const InputPassword = ({ onPasswoordChange }: { onPasswoordChange: (value: strin
         placeholder="**********"
         value={value}
         onChange={handleChange}
+        disabled={isDisabled}
       />
     </div>
-  )
-}
+  );
+};
 
-const Buttons = () => (
+const Buttons = ({ isLoading }: { isLoading: boolean }) => (
   <>
     <div className="flex justify-between items-center mb-6">
       <div>
@@ -93,13 +109,14 @@ const Buttons = () => (
     <div className="flex space-x-4">
       <button
         type="submit"
-        className="w-full bg-sky-400 text-white p-3 rounded-lg hover:bg-sky-600 transition font-medium"
+        className="w-full bg-sky-400 text-white p-3 rounded-lg hover:bg-sky-600 transition font-medium flex items-center justify-center "
       >
-        Login
+        <span className="mr-2">Login</span>
+        {isLoading && <Spinner></Spinner>}
       </button>
     </div>
   </>
-)
+);
 
 const Img = () => (
   <>
@@ -108,30 +125,55 @@ const Img = () => (
         src="/assets/logo.jpeg"
         alt="Login"
         fill
+        priority
+        sizes="50vw"
         style={{ objectFit: 'cover' }}
         className="rounded-l-lg"
       />
     </div>
   </>
-)
+);
 
-export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+const Spinner = () => {
+  return (
+    <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+  );
+};
+
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isDisabled, setDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log(email)
-    console.log(password)
-  }
+    event.preventDefault();
+    setDisabled(true);
+    setIsLoading(true);
+    const domain: string = window.location.hostname;
+
+    try {
+      await getRestaurante(domain);
+      console.log('Seu dominio logado é : ' + domain);
+      await login(email, password, null);
+      console.log('voce foi logado');
+      setDisabled(false);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setDisabled(false);
+      setIsLoading(false);
+    }
+  };
 
   const handleEmailChange = (value: string) => {
-    setEmail(value)
-  }
+    setEmail(value);
+  };
 
   const handlePasswordChange = (value: string) => {
-    setPassword(value)
-  }
+    setPassword(value);
+  };
 
   return (
     <>
@@ -139,12 +181,12 @@ export default function Login() {
         <Card>
           <Img />
           <Form onHandleSubmit={handleSubmit}>
-            <InputMail onEmailChange={handleEmailChange} />
-            <InputPassword onPasswoordChange={handlePasswordChange} />
-            <Buttons />
+            <InputMail onEmailChange={handleEmailChange} isDisabled={isDisabled} />
+            <InputPassword onPasswordChange={handlePasswordChange} isDisabled={isDisabled} />
+            <Buttons isLoading={isLoading} />
           </Form>
         </Card>
       </Container>
     </>
-  )
+  );
 }
