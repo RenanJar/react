@@ -141,52 +141,38 @@ const Spinner = () => {
 };
 
 export default function LoginPage() {
+  const { login, isLoading, error } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isDisabled, setDisabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setDisabled(true);
-    setIsLoading(true);
-    const domain: string = window.location.hostname;
 
     try {
-      await getRestaurante(domain);
-      console.log('Seu dominio logado é : ' + domain);
-      await login(email, password, null);
-      console.log('voce foi logado');
-      setDisabled(false);
-      setIsLoading(false);
+      const domain = window.location.hostname;
+      const restaurante = await getRestaurante(domain);
+      if (restaurante && restaurante.data) {
+        await login(email, password, restaurante.data.resturautanteId);
+        console.log('Login realizado com sucesso');
+      } else {
+        throw new Error('Restaurante não encontrado');
+      }
     } catch (error) {
-      console.log(error);
-      setDisabled(false);
-      setIsLoading(false);
+      console.error('Erro no login:', error);
     }
   };
 
-  const handleEmailChange = (value: string) => {
-    setEmail(value);
-  };
-
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-  };
-
   return (
-    <>
-      <Container>
-        <Card>
-          <Img />
-          <Form onHandleSubmit={handleSubmit}>
-            <InputMail onEmailChange={handleEmailChange} isDisabled={isDisabled} />
-            <InputPassword onPasswordChange={handlePasswordChange} isDisabled={isDisabled} />
-            <Buttons isLoading={isLoading} />
-          </Form>
-        </Card>
-      </Container>
-    </>
+    <Container>
+      <Card>
+        <Img />
+        <Form onHandleSubmit={handleSubmit}>
+          {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">{error}</div>}
+          <InputMail onEmailChange={setEmail} isDisabled={isLoading} />
+          <InputPassword onPasswordChange={setPassword} isDisabled={isLoading} />
+          <Buttons isLoading={isLoading} />
+        </Form>
+      </Card>
+    </Container>
   );
 }

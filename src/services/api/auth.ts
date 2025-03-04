@@ -1,6 +1,7 @@
 import { CookieAccessProvider } from '@/services/storage/CookieAccesProvider';
-import api from './api';
+import api from './interceptor';
 import { StorageProviderInterface } from '@/types/storage/storageProvider.types';
+
 interface LoginResponse {
   accessToken: string;
   refreshToken: string;
@@ -17,10 +18,10 @@ const storageProvider: StorageProviderInterface = new CookieAccessProvider();
 export const login = async (
   email: string,
   password: string,
-  restaurante: string | null,
+  restaurante: string,
 ): Promise<LoginResponse> => {
   const request: LoginResquest = {
-    restaurante: '123e4567-e89b-12d3-a456-426614174000',
+    restaurante: restaurante,
     email: email,
     senha: password,
   };

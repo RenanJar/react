@@ -1,56 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationItem } from '../sidebar/NavigationItem';
 import { SideBar } from '../sidebar/SideBar';
-import { HomeIcon, InformationCircleIcon, PhoneIcon, ServerIcon } from '@heroicons/react/16/solid';
+import {
+  HomeIcon,
+  CakeIcon,
+  ClipboardIcon,
+  UsersIcon,
+  ChartBarIcon,
+  CogIcon,
+} from '@heroicons/react/24/outline';
 import { useMediaQuery } from 'react-responsive';
+import { useAuth } from '@/hooks/useAuth';
 
 const navigationItems: NavigationItem[] = [
-  { title: 'Home', path: '/home', icon: <HomeIcon className="h-5 w-5" /> },
-  { title: 'About', path: '/about', icon: <InformationCircleIcon className="h-5 w-5" /> },
-  { title: 'Services', path: '/services', icon: <ServerIcon className="h-5 w-5" /> },
-  { title: 'Contact', path: '/contact', icon: <PhoneIcon className="h-5 w-5" /> },
+  {
+    title: 'Dashboard',
+    path: '/dashboard',
+    icon: <HomeIcon className="h-6 w-6" />,
+  },
+  {
+    title: 'Cardápio',
+    path: '/cardapio',
+    icon: <CakeIcon className="h-6 w-6" />,
+  },
+  {
+    title: 'Pedidos',
+    path: '/pedidos',
+    icon: <ClipboardIcon className="h-6 w-6" />,
+  },
+  {
+    title: 'Clientes',
+    path: '/clientes',
+    icon: <UsersIcon className="h-6 w-6" />,
+  },
+  {
+    title: 'Relatórios',
+    path: '/relatorios',
+    icon: <ChartBarIcon className="h-6 w-6" />,
+  },
+  {
+    title: 'Configurações',
+    path: '/configuracoes',
+    icon: <CogIcon className="h-6 w-6" />,
+  },
 ];
-
-const propsgreen = {
-  title: 'My SideBar',
-  backgroundColor: 'bg-green-100',
-  hoverBgColor: 'hover:bg-green-200',
-  navigationItems: navigationItems,
-};
-
-const propswhite = {
-  title: 'My SideBar white',
-  backgroundColor: 'bg-pink-100',
-  hoverBgColor: 'hover:bg-pink-200',
-  navigationItems: navigationItems,
-};
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
-  const [propSideBar, setPropSideBar] = useState(propswhite);
-  const [changeColor, setChangeColor] = useState(true);
-
-  const changeCollor = () => {
-    if (changeColor) {
-      setPropSideBar(propsgreen);
-      setChangeColor(false);
-    } else {
-      setChangeColor(true);
-      setPropSideBar(propswhite);
-    }
-  };
+  const { restaurante } = useAuth();
+  const [sideBarProps, setSideBarProps] = useState({
+    title: 'Pizza Manager', //quando a rota estiver pronta setar aqui o restaurante para exibir o nome certinho
+    backgroundColor: 'bg-blue-900',
+    hoverBgColor: 'hover:bg-blue-800',
+    navigationItems: navigationItems,
+  });
 
   return (
-    <div>
-      <SideBar props={propSideBar} />
-      <main className={`transition-all duration-300 ${isMobile ? 'ml-0' : 'ml-64'}`}>
-        {/* <button
-          className="flex items-center p-2 rounded-lg text-black backgroundColor: bg-white"
-          onClick={changeCollor}
-        >
-          button
-        </button> */}
-        {children}
+    <div className="min-h-screen bg-gray-100 flex">
+      <SideBar props={sideBarProps} />
+      <main className={`flex-1 transition-all duration-300 ${isMobile ? 'ml-0' : 'ml-64'}`}>
+        <div className="p-6">{children}</div>
       </main>
     </div>
   );

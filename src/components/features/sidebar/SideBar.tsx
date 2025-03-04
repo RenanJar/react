@@ -3,6 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 import { NavigationItem } from './NavigationItem';
 import { Bars4Icon } from '@heroicons/react/16/solid';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface SideBarProps {
   title: string;
@@ -51,16 +52,18 @@ const SidebarNavItem = ({
   onClick,
   path,
   icon,
+  isActive,
 }: {
   children?: React.ReactNode;
   hoverBgColor?: string;
   onClick?: () => void;
   path: string;
   icon?: React.ReactNode;
+  isActive: boolean;
 }) => (
   <Link
     href={path}
-    className={`flex items-center p-2 rounded-lg text-black ${hoverBgColor} group`}
+    className={`flex items-center p-2 rounded-lg text-black ${hoverBgColor} group ${isActive ? 'bg-blue-500' : ''}`}
     onClick={onClick}
   >
     <span>{icon}</span>
@@ -82,6 +85,7 @@ const ButtonToggle = ({
 export function SideBar({ props }: { props: SideBarProps }) {
   const [visible, setIsOpen] = useState(true);
   const isMobile = useMediaQuery({ maxWidth: 768 });
+  const router = useRouter();
 
   useEffect(() => {
     if (isMobile) {
@@ -100,17 +104,20 @@ export function SideBar({ props }: { props: SideBarProps }) {
       <SidebarContainer backgroundColor={props.backgroundColor} visible={visible}>
         <SidebarHeader title={props.title} />
         <SidebarNav>
-          {props.navigationItems.map((item, index) => (
-            <SidebarNavItem
-              key={index}
-              hoverBgColor={props.hoverBgColor}
-              onClick={handleNavItemClick}
-              icon={item.icon}
-              path={item.path}
-            >
-              {item.title}
-            </SidebarNavItem>
-          ))}
+          {props.navigationItems.map(
+            (item: { icon: React.ReactNode; path: string; title: string }, index: number) => (
+              <SidebarNavItem
+                key={index}
+                hoverBgColor={props.hoverBgColor}
+                onClick={handleNavItemClick}
+                icon={item.icon}
+                path={item.path}
+                isActive={router.pathname === item.path}
+              >
+                {item.title}
+              </SidebarNavItem>
+            ),
+          )}
         </SidebarNav>
       </SidebarContainer>
     </>

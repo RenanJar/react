@@ -3,8 +3,14 @@ import Cookies from 'js-cookie';
 
 export class CookieAccessProvider implements StorageProviderInterface {
   save(key: string, value: string): void {
-    if (this.get(key)) return;
-    Cookies.set(key, value);
+    const isToken = key === 'token' || key === 'refreshToken';
+
+    Cookies.set(key, value, {
+      secure: true,
+      sameSite: 'strict',
+      expires: isToken ? 1 : 7, // tokens expiram em 1 dia, outros em 7
+      path: '/',
+    });
   }
 
   get(key: string): string | undefined {
