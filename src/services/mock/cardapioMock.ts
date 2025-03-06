@@ -1,26 +1,27 @@
-import { Categoria, Produto } from '@/types/cardapio.types';
+import { Cardapio, Produto } from '@/types/cardapio.types';
 
 // Dados iniciais mockados
-let categoriasMock: Categoria[] = [
+let cardapiosMock: Cardapio[] = [
   {
     id: '1',
-    nome: 'Pizzas Tradicionais',
+    nome: 'Cardápio Principal',
     ativo: true,
+    categorias: [],
+    produtos: [],
   },
   {
     id: '2',
-    nome: 'Pizzas Especiais',
+    nome: 'Cardápio de Bebidas',
     ativo: true,
+    categorias: [],
+    produtos: [],
   },
   {
     id: '3',
-    nome: 'Bebidas',
-    ativo: true,
-  },
-  {
-    id: '4',
-    nome: 'Sobremesas',
+    nome: 'Cardápio de Sobremesas',
     ativo: false,
+    categorias: [],
+    produtos: [],
   },
 ];
 
@@ -30,7 +31,7 @@ let produtosMock: Produto[] = [
     nome: 'Pizza Margherita',
     descricao: 'Molho de tomate, mussarela, manjericão fresco e azeite',
     preco: 45.9,
-    categoriaId: '1',
+    cardapioId: '1',
     imagem: 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca',
     ativo: true,
     destaque: true,
@@ -39,26 +40,26 @@ let produtosMock: Produto[] = [
   },
   {
     id: '2',
-    nome: 'Pizza 4 Queijos',
-    descricao: 'Mussarela, parmesão, gorgonzola e catupiry',
-    preco: 55.9,
-    categoriaId: '2',
-    imagem: 'https://images.unsplash.com/photo-1513104890138-7c749659a591',
-    ativo: true,
-    destaque: true,
-    ingredientes: ['Mussarela', 'Parmesão', 'Gorgonzola', 'Catupiry'],
-    tempoPreparoMinutos: 25,
-  },
-  {
-    id: '3',
-    nome: 'Coca-Cola 2L',
-    descricao: 'Refrigerante Coca-Cola 2 litros',
+    nome: 'Refrigerante Cola 2L',
+    descricao: 'Refrigerante sabor cola 2 litros',
     preco: 12.9,
-    categoriaId: '3',
+    cardapioId: '2',
     imagem: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e',
     ativo: true,
     destaque: false,
     ingredientes: [],
+    tempoPreparoMinutos: 0,
+  },
+  {
+    id: '3',
+    nome: 'Pudim de Leite',
+    descricao: 'Pudim de leite condensado tradicional',
+    preco: 15.9,
+    cardapioId: '3',
+    imagem: 'https://images.unsplash.com/photo-1590083745251-4fdb0b285c6a',
+    ativo: true,
+    destaque: true,
+    ingredientes: ['Leite condensado', 'Leite', 'Ovos', 'Açúcar'],
     tempoPreparoMinutos: 0,
   },
 ];
@@ -67,44 +68,46 @@ let produtosMock: Produto[] = [
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-// Mock da API de Categorias
-export const categoriasMockApi = {
-  listar: async (): Promise<Categoria[]> => {
-    await delay(800); // Simula delay da rede
-    return [...categoriasMock];
+// Mock da API de Cardápios
+export const cardapiosMockApi = {
+  listar: async (): Promise<Cardapio[]> => {
+    await delay(800);
+    return [...cardapiosMock];
   },
 
-  criar: async (categoria: Partial<Categoria>): Promise<Categoria> => {
+  criar: async (cardapio: Partial<Cardapio>): Promise<Cardapio> => {
     await delay(800);
-    const novaCategoria: Categoria = {
+    const novoCardapio: Cardapio = {
       id: generateId(),
-      nome: categoria.nome!,
-      ativo: categoria.ativo ?? true,
+      nome: cardapio.nome!,
+      ativo: cardapio.ativo ?? true,
+      categorias: [],
+      produtos: [],
     };
-    categoriasMock.push(novaCategoria);
-    return novaCategoria;
+    cardapiosMock.push(novoCardapio);
+    return novoCardapio;
   },
 
-  atualizar: async (id: string, categoria: Partial<Categoria>): Promise<Categoria> => {
+  atualizar: async (id: string, cardapio: Partial<Cardapio>): Promise<Cardapio> => {
     await delay(800);
-    const index = categoriasMock.findIndex((c) => c.id === id);
-    if (index === -1) throw new Error('Categoria não encontrada');
+    const index = cardapiosMock.findIndex((c) => c.id === id);
+    if (index === -1) throw new Error('Cardápio não encontrado');
 
-    const categoriaAtualizada = {
-      ...categoriasMock[index],
-      ...categoria,
+    const cardapioAtualizado = {
+      ...cardapiosMock[index],
+      ...cardapio,
     };
-    categoriasMock[index] = categoriaAtualizada;
-    return categoriaAtualizada;
+    cardapiosMock[index] = cardapioAtualizado;
+    return cardapioAtualizado;
   },
 
   excluir: async (id: string): Promise<void> => {
     await delay(800);
-    const produtosCategoria = produtosMock.some((p) => p.categoriaId === id);
-    if (produtosCategoria) {
-      throw new Error('Não é possível excluir uma categoria que possui produtos');
+    const produtosCardapio = produtosMock.some((p) => p.cardapioId === id);
+    if (produtosCardapio) {
+      throw new Error('Não é possível excluir um cardápio que possui produtos');
     }
-    categoriasMock = categoriasMock.filter((c) => c.id !== id);
+    cardapiosMock = cardapiosMock.filter((c) => c.id !== id);
   },
 };
 
@@ -122,7 +125,7 @@ export const produtosMockApi = {
       nome: produto.nome!,
       descricao: produto.descricao!,
       preco: produto.preco!,
-      categoriaId: produto.categoriaId!,
+      cardapioId: produto.cardapioId!,
       imagem: produto.imagem || '',
       ativo: produto.ativo ?? true,
       destaque: produto.destaque ?? false,

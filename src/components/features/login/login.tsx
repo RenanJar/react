@@ -8,9 +8,7 @@ const Container = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Card = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl w-full">
-    {children}
-  </div>
+  <div className="flex bg-white shadow-lg overflow-hidden max-w-4xl w-full">{children}</div>
 );
 
 const Form = ({
@@ -53,7 +51,7 @@ const InputMail = ({
       <label className="block text-gray-600 font-medium">Email Address</label>
       <input
         type="email"
-        className=" text-gray-600 w-full p-3 border border-gray-300 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        className=" text-gray-600 w-full p-3 border border-gray-300 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
         placeholder="coolname@name.com"
         onChange={handleChange}
         value={value}
@@ -83,7 +81,7 @@ const InputPassword = ({
       <label className="block text-gray-600 font-medium">Password</label>
       <input
         type="password"
-        className=" text-gray-600 w-full p-3 border border-gray-300 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        className=" text-gray-600 w-full p-3 border border-gray-300 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
         placeholder="**********"
         value={value}
         onChange={handleChange}
@@ -109,7 +107,7 @@ const Buttons = ({ isLoading }: { isLoading: boolean }) => (
     <div className="flex space-x-4">
       <button
         type="submit"
-        className="w-full bg-sky-400 text-white p-3 rounded-lg hover:bg-sky-600 transition font-medium flex items-center justify-center "
+        className="w-full bg-sky-400 text-white p-3  hover:bg-sky-600 transition font-medium flex items-center justify-center "
       >
         <span className="mr-2">Login</span>
         {isLoading && <Spinner></Spinner>}

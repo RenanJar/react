@@ -1,5 +1,5 @@
 import { CookieAccessProvider } from '@/services/storage/CookieAccesProvider';
-import api from './interceptor';
+import api from '../interceptors/interceptor';
 import { StorageProviderInterface } from '@/types/storage/storageProvider.types';
 
 interface LoginResponse {
@@ -25,7 +25,12 @@ export const login = async (
     email: email,
     senha: password,
   };
-  const response = await api.post('auth/login', request);
+  const origin = window.location.origin;
+  const response = await api.post('auth/login', request, {
+    headers: {
+      Origin: origin,
+    },
+  });
   return response.data;
 };
 
@@ -35,6 +40,5 @@ export const logout = () => {
 
 export const refreshToken = async () => {
   const response = await api.post('/auth/refresh');
-  storageProvider.save('refreshToken', response.data.refreshToken);
   return response.data.token;
 };

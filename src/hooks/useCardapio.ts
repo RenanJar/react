@@ -1,119 +1,68 @@
 import { useState, useCallback } from 'react';
-import { Categoria, Produto } from '@/types/cardapio.types';
-import { categoriasApi, produtosApi } from '@/services/api/cardapio';
+import { Cardapio, PageableResponse } from '@/types/cardapio.types';
+import { cardapiosApi } from '@/services/api/cardapio.api';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export function useCardapio() {
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [cardapios, setCardapios] = useState<Cardapio[]>([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  // Funções para Categorias
-  const carregarCategorias = useCallback(async () => {
+  const carregarCardapios = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await categoriasApi.listar();
-      setCategorias(data);
+      const response = await cardapiosApi.listar();
+
+      setCardapios(response.content);
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        router.push('/login');
+        return;
+      }
+      toast.error('Erro ao carregar cardápios');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [router]);
+
+  const criarCardapio = useCallback(async (cardapio: Partial<Cardapio>) => {
+    try {
+      setLoading(true);
+      const novoCardapioData = await cardapiosApi.criar(cardapio);
+      setCardapios((prev) => [...prev, novoCardapioData]);
+      toast.success('Cardápio criado com sucesso!');
     } catch (error) {
-      toast.error('Erro ao carregar categorias');
+      toast.error('Erro ao criar cardápio');
       console.error(error);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const criarCategoria = useCallback(async (categoria: Partial<Categoria>) => {
+  const atualizarCardapio = useCallback(async (id: string, cardapio: Partial<Cardapio>) => {
     try {
       setLoading(true);
-      const novaCategoriaData = await categoriasApi.criar(categoria);
-      setCategorias((prev) => [...prev, novaCategoriaData]);
-      toast.success('Categoria criada com sucesso!');
+      const cardapioAtualizado = await cardapiosApi.atualizar(id, cardapio);
+      setCardapios((prev) => prev.map((cat) => (cat.id === id ? cardapioAtualizado : cat)));
+      toast.success('Cardápio atualizado com sucesso!');
     } catch (error) {
-      toast.error('Erro ao criar categoria');
+      toast.error('Erro ao atualizar cardápio');
       console.error(error);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const atualizarCategoria = useCallback(async (id: string, categoria: Partial<Categoria>) => {
+  const excluirCardapio = useCallback(async (id: string) => {
     try {
       setLoading(true);
-      const categoriaAtualizada = await categoriasApi.atualizar(id, categoria);
-      setCategorias((prev) => prev.map((cat) => (cat.id === id ? categoriaAtualizada : cat)));
-      toast.success('Categoria atualizada com sucesso!');
+      await cardapiosApi.excluir(id);
+      setCardapios((prev) => prev.filter((cat) => cat.id !== id));
+      toast.success('Cardápio excluído com sucesso!');
     } catch (error) {
-      toast.error('Erro ao atualizar categoria');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const excluirCategoria = useCallback(async (id: string) => {
-    try {
-      setLoading(true);
-      await categoriasApi.excluir(id);
-      setCategorias((prev) => prev.filter((cat) => cat.id !== id));
-      toast.success('Categoria excluída com sucesso!');
-    } catch (error) {
-      toast.error('Erro ao excluir categoria');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Funções para Produtos
-  const carregarProdutos = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await produtosApi.listar();
-      setProdutos(data);
-    } catch (error) {
-      toast.error('Erro ao carregar produtos');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const criarProduto = useCallback(async (produto: Partial<Produto>) => {
-    try {
-      setLoading(true);
-      const novoProdutoData = await produtosApi.criar(produto);
-      setProdutos((prev) => [...prev, novoProdutoData]);
-      toast.success('Produto criado com sucesso!');
-    } catch (error) {
-      toast.error('Erro ao criar produto');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const atualizarProduto = useCallback(async (id: string, produto: Partial<Produto>) => {
-    try {
-      setLoading(true);
-      const produtoAtualizado = await produtosApi.atualizar(id, produto);
-      setProdutos((prev) => prev.map((prod) => (prod.id === id ? produtoAtualizado : prod)));
-      toast.success('Produto atualizado com sucesso!');
-    } catch (error) {
-      toast.error('Erro ao atualizar produto');
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const excluirProduto = useCallback(async (id: string) => {
-    try {
-      setLoading(true);
-      await produtosApi.excluir(id);
-      setProdutos((prev) => prev.filter((prod) => prod.id !== id));
-      toast.success('Produto excluído com sucesso!');
-    } catch (error) {
-      toast.error('Erro ao excluir produto');
+      toast.error('Erro ao excluir cardápio');
       console.error(error);
     } finally {
       setLoading(false);
@@ -121,16 +70,11 @@ export function useCardapio() {
   }, []);
 
   return {
-    categorias,
-    produtos,
+    cardapios,
     loading,
-    carregarCategorias,
-    criarCategoria,
-    atualizarCategoria,
-    excluirCategoria,
-    carregarProdutos,
-    criarProduto,
-    atualizarProduto,
-    excluirProduto,
+    carregarCardapios,
+    criarCardapio,
+    atualizarCardapio,
+    excluirCardapio,
   };
 }

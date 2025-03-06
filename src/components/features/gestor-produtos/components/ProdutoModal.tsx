@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog } from '@headlessui/react';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { XMarkIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { Produto, Categoria } from '@/types/cardapio.types';
 
@@ -59,13 +59,13 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-2xl rounded bg-white p-6 w-full max-h-[90vh] overflow-y-auto">
+        <DialogPanel className="mx-auto max-w-2xl rounded bg-white p-6 w-full max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
-            <Dialog.Title className="text-lg font-medium">
+            <DialogTitle className="text-lg font-medium text-black">
               {produto ? 'Editar Produto' : 'Novo Produto'}
-            </Dialog.Title>
+            </DialogTitle>
             <button onClick={onClose}>
-              <XMarkIcon className="h-6 w-6 text-gray-500" />
+              <XMarkIcon className="h-6 w-6 text-gray-700" />
             </button>
           </div>
 
@@ -80,7 +80,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                   type="text"
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full text-gray-500 px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -90,7 +90,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                 <select
                   value={formData.categoriaId}
                   onChange={(e) => setFormData({ ...formData, categoriaId: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 >
                   <option value="">Selecione uma categoria</option>
@@ -110,7 +110,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                   min="0"
                   value={formData.preco}
                   onChange={(e) => setFormData({ ...formData, preco: parseFloat(e.target.value) })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full text-gray-500 px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -126,7 +126,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                   onChange={(e) =>
                     setFormData({ ...formData, tempoPreparoMinutos: parseInt(e.target.value) })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full text-gray-500 px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -139,7 +139,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                 value={formData.descricao}
                 onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full text-gray-500 px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
               />
             </div>
@@ -153,7 +153,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                     type="text"
                     value={ingrediente}
                     onChange={(e) => handleIngredienteChange(index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="flex-1 text-gray-500 px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                     placeholder="Digite um ingrediente"
                   />
                   {formData.ingredientes.length > 1 && (
@@ -184,7 +184,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                   type="text"
                   value={formData.imagem}
                   onChange={(e) => setFormData({ ...formData, imagem: e.target.value })}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="flex-1 text-gray-500 px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
                   placeholder="https://exemplo.com/imagem.jpg"
                 />
                 {formData.imagem && (
@@ -192,7 +192,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                     <img
                       src={formData.imagem}
                       alt="Preview"
-                      className="w-full h-full object-cover rounded-md"
+                      className="w-full h-full object-cover rounded-sm"
                     />
                   </div>
                 )}
@@ -206,7 +206,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                   type="checkbox"
                   checked={formData.ativo}
                   onChange={(e) => setFormData({ ...formData, ativo: e.target.checked })}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded-sm  border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className="ml-2 text-sm text-gray-700">Produto Ativo</span>
               </label>
@@ -216,7 +216,7 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
                   type="checkbox"
                   checked={formData.destaque}
                   onChange={(e) => setFormData({ ...formData, destaque: e.target.checked })}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded-sm border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className="ml-2 text-sm text-gray-700">Produto em Destaque</span>
               </label>
@@ -227,19 +227,19 @@ export function ProdutoModal({ produto, categorias, onClose, onSave }: ProdutoMo
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-sm hover:bg-gray-200"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-sm hover:bg-blue-700"
               >
                 Salvar
               </button>
             </div>
           </form>
-        </Dialog.Panel>
+        </DialogPanel>
       </div>
     </Dialog>
   );

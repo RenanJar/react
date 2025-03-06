@@ -9,7 +9,7 @@ export interface Produto {
   nome: string;
   descricao: string;
   preco: number;
-  categoriaId: string;
+  cardapioId: string;
   imagem?: string;
   ativo: boolean;
   destaque: boolean;
@@ -20,9 +20,8 @@ export interface Produto {
 export interface Cardapio {
   id: string;
   nome: string;
-  ativo: boolean;
+  descricao: string;
   categorias: Categoria[];
-  produtos: Produto[];
 }
 
 export interface NavigationItem {

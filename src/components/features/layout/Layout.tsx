@@ -1,68 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { NavigationItem } from '../sidebar/NavigationItem';
+import React from 'react';
+import { Layout as AntLayout } from 'antd';
 import { SideBar } from '../sidebar/SideBar';
 import {
-  HomeIcon,
-  CakeIcon,
-  ClipboardIcon,
-  UsersIcon,
-  ChartBarIcon,
-  CogIcon,
-} from '@heroicons/react/24/outline';
-import { useMediaQuery } from 'react-responsive';
-import { useAuth } from '@/hooks/useAuth';
+  HomeOutlined,
+  ShopOutlined,
+  FileOutlined,
+  UserOutlined,
+  BarChartOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
+import { NavigationItem } from '../sidebar/NavigationItem';
+import { logout } from '@/services/api/auth';
+
+const { Content } = AntLayout;
 
 const navigationItems: NavigationItem[] = [
   {
     title: 'Dashboard',
     path: '/dashboard',
-    icon: <HomeIcon className="h-6 w-6" />,
+    icon: <HomeOutlined />,
   },
   {
     title: 'Cardápio',
     path: '/cardapio',
-    icon: <CakeIcon className="h-6 w-6" />,
+    children: [
+      {
+        title: 'Cardápio',
+        path: '/cardapio',
+        icon: <ShopOutlined />,
+      },
+      {
+        title: 'Categorias',
+        path: '/categorias',
+        icon: <ShopOutlined />,
+      },
+      {
+        title: 'Produtos',
+        path: '/produtos',
+        icon: <ShopOutlined />,
+      },
+    ],
+    icon: <ShopOutlined />,
   },
   {
     title: 'Pedidos',
     path: '/pedidos',
-    icon: <ClipboardIcon className="h-6 w-6" />,
+    icon: <FileOutlined />,
   },
   {
     title: 'Clientes',
     path: '/clientes',
-    icon: <UsersIcon className="h-6 w-6" />,
+    icon: <UserOutlined />,
   },
   {
     title: 'Relatórios',
     path: '/relatorios',
-    icon: <ChartBarIcon className="h-6 w-6" />,
+    icon: <BarChartOutlined />,
   },
   {
     title: 'Configurações',
     path: '/configuracoes',
-    icon: <CogIcon className="h-6 w-6" />,
+    icon: <SettingOutlined />,
+  },
+  {
+    title: 'Sair',
+    path: '#',
+    icon: <LogoutOutlined />,
+    onClick: () => logout(),
   },
 ];
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  const isMobile = useMediaQuery({ maxWidth: 768 });
-  const { restaurante } = useAuth();
-  const [sideBarProps, setSideBarProps] = useState({
-    title: 'Pizza Manager', //quando a rota estiver pronta setar aqui o restaurante para exibir o nome certinho
-    backgroundColor: 'bg-blue-900',
-    hoverBgColor: 'hover:bg-blue-800',
-    navigationItems: navigationItems,
-  });
+interface LayoutProps {
+  children: React.ReactNode;
+}
 
+export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-100 flex">
-      <SideBar props={sideBarProps} />
-      <main className={`flex-1 transition-all duration-300 ${isMobile ? 'ml-0' : 'ml-64'}`}>
-        <div className="p-6">{children}</div>
-      </main>
-    </div>
+    <AntLayout style={{ minHeight: '100vh' }}>
+      <SideBar props={{ title: 'ABC PIZZAS', navigationItems }} />
+      <AntLayout style={{ marginLeft: 200 }}>
+        <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280 }}>{children}</Content>
+      </AntLayout>
+    </AntLayout>
   );
-};
-
-export default Layout;
+}

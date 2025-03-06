@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       setError(null);
 
-      const token = storageProvider.get('token');
-      console.log('token', token);
+      const token = storageProvider.get('accessToken');
+
       if (!token) {
         if (!router.pathname.includes('/login')) {
           router.push('/login');
@@ -60,12 +60,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setIsLoading(true);
       setError(null);
-
       const data = await apiLogin(email, password, restaurante);
       console.log('data', data);
-      storageProvider.save('token', data.accessToken);
+      storageProvider.save('accessToken', data.accessToken);
       storageProvider.save('refreshToken', data.refreshToken);
 
+      console.log('accessToken', storageProvider.get('accessToken'));
       const domain = window.location.hostname;
       const restauranteData = await buscarRestaurante(domain);
       setRestaurante(restauranteData);
